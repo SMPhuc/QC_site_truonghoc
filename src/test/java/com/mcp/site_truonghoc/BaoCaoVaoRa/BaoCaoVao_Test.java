@@ -341,6 +341,7 @@ public class BaoCaoVao_Test {
         System.out.println("➡️ Click nút xuất Excel");
         baocaocao_Page.buttonExcel.click();
         System.out.println("✅ Đã click nút xuất Excel");
+        Thread.sleep(3000);
         
         System.out.println("\n6️⃣ KIỂM TRA FILE TẢI VỀ");
         System.out.println("➡️ Thư mục tải về: " + downloadPath);
@@ -351,7 +352,7 @@ public class BaoCaoVao_Test {
     private void verifyFileDownload() throws InterruptedException {
         boolean fileDownloaded = false;
         File downloadedFile = null;
-        int maxAttempts = 30;
+        int maxAttempts = 10;
         String expectedFileName = "Báo cáo vào ra.xlsx"; // Thay đổi tên file theo đúng tên file tải về
 
         for (int i = 0; i < maxAttempts && !fileDownloaded; i++) {
