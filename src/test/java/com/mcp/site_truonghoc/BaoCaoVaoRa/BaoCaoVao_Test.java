@@ -371,7 +371,7 @@ public class BaoCaoVao_Test {
         if (ciEnv != null && ciEnv.equals("true") || 
             githubActions != null && githubActions.equals("true")) {
             isCI = true;
-            System.out.println("🔄 Đang chạy trong môi trường CI, bỏ qua kiểm tra file Excel");
+            System.out.println("🔄 Đang chạy trong môi trường CI");
             return;
         }
 

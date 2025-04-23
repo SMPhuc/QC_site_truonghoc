@@ -64,19 +64,27 @@ jobs:
         echo "📊 Kết quả build và test:"
         ls -la build/reports/tests/test/
 
-    - name: Copy Test Report to gp-page
+    - name: Prepare Test Report
       if: always()
       run: |
-        mkdir -p gp-page
-        cp build/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html gp-page/
-        echo "📊 Đã sao chép báo cáo test vào thư mục gp-page"
+        # Tạo thư mục reports nếu chưa tồn tại
+        mkdir -p build/reports/tests/test
+        
+        # Kiểm tra và sao chép file báo cáo test
+        if [ -f "build/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html" ]; then
+          cp build/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html build/reports/tests/test/index.html
+          echo "✅ Đã sao chép báo cáo test vào index.html"
+        else
+          echo "⚠️ Không tìm thấy file báo cáo test"
+          ls -la build/reports/tests/test/
+        fi
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/reports/allure-report
+        publish_dir: build/reports/tests/test
         publish_branch: gh-pages
         force_orphan: true
         user_name: 'github-actions[bot]'
