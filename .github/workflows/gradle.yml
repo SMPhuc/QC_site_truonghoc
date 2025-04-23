@@ -60,80 +60,61 @@ jobs:
     - name: Build and Test with Gradle
       continue-on-error: true
       run: |
-        ./gradlew build allureReport
+        ./gradlew clean test
         echo "📊 Kết quả build và test:"
         ls -la build/reports/tests/test/
-        cat build/reports/tests/test/index.html
-        echo "📁 Kiểm tra thư mục build:"
-        ls -la build/
-        echo "📁 Kiểm tra thư mục reports:"
-        ls -la build/reports/
-        echo "📁 Kiểm tra thư mục allure-report:"
-        ls -la build/reports/allure-report/ || true
 
-    - name: List Downloaded Files
-      continue-on-error: true
+    - name: Generate Allure Report
+      if: always()
       run: |
-        echo "📁 Nội dung thư mục downloads sau khi chạy test:"
-        ls -la downloads/
-        echo "📊 Thông tin chi tiết các file:"
-        for file in downloads/*; do
-          if [ -f "$file" ]; then
-            echo "File: $file"
-            echo "Size: $(stat -f%z "$file") bytes"
-            echo "Permissions: $(stat -f%p "$file")"
-          fi
-        done
+        ./gradlew allureReport
+        echo "📊 Kiểm tra thư mục Allure Report:"
+        ls -la build/reports/allure-report/
+        
+        # Tạo file .nojekyll để GitHub Pages không bỏ qua các file bắt đầu bằng _
+        touch build/reports/allure-report/.nojekyll
+        
+        # Tạo file index.html nếu chưa tồn tại
+        if [ ! -f "build/reports/allure-report/index.html" ]; then
+          cp build/reports/allure-report/data/index.html build/reports/allure-report/index.html
+        fi
 
-    - name: Prepare Allure Results
-      continue-on-error: true
-      run: |
-        mkdir -p allure-results
-        cp -r build/allure-results/* allure-results/
-        echo "📊 Allure results đã được chuẩn bị:"
-        ls -la allure-results/
+    - name: Store Allure results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-results
+        path: build/allure-results
+        retention-days: 30
 
-    - name: Upload Allure Report
+    - name: Store Allure report
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
-        path: allure-results
-
-    - name: Prepare GitHub Pages
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "📁 Kiểm tra thư mục build:"
-        ls -la build/
-        echo "📁 Kiểm tra thư mục reports:"
-        ls -la build/reports/
-        echo "📁 Kiểm tra thư mục allure-report:"
-        ls -la build/reports/allure-report/ || true
-        
-        # Tạo thư mục nếu chưa tồn tại
-        mkdir -p ./build/reports/allure-report
-        touch ./build/reports/allure-report/.nojekyll
-        
-        # Copy nội dung từ allure-results
-        cp -r allure-results/* ./build/reports/allure-report/
-        
-        # Tạo file index.html nếu chưa tồn tại
-        if [ ! -f "./build/reports/allure-report/index.html" ]; then
-            echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=./allure-report/index.html'></head></html>" > ./build/reports/allure-report/index.html
-        fi
-        
-        echo "✅ Đã tạo file .nojekyll và index.html"
-        echo "📁 Kiểm tra lại thư mục sau khi chuẩn bị:"
-        ls -la ./build/reports/allure-report/
+        path: build/reports/allure-report
+        retention-days: 30
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/reports/allure-report
+        publish_dir: build/reports/allure-report
         publish_branch: gh-pages
         force_orphan: true
-        commit_message: "Update Allure Report [skip ci]"
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: |
+          Deploy Allure Report
+          From commit: ${{ github.sha }}
+          Workflow: ${{ github.workflow }}
+
+    - name: Post the link to the report
+      if: always()
+      run: |
+        echo "::notice::🔍 Allure Report đã được deploy tại: https://smphuc.github.io/QC_site_truonghoc/"
+        echo "⏳ Vui lòng đợi 1-2 phút để GitHub Pages cập nhật."
 
   dependency-submission:
     runs-on: ubuntu-latest

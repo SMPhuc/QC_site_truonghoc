@@ -61,4 +61,12 @@ allure {
   useTestNG {
     version = "${allureVersion}"
   }
+
+  // Cấu hình thêm cho CI
+  if (System.getenv('CI') == 'true') {
+    report {
+      reportDir = file("$buildDir/reports/allure-report")
+      resultsDir = file("$buildDir/allure-results")
+    }
+  }
 }
