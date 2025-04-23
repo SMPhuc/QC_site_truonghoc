@@ -117,29 +117,50 @@ public class BaoCaoVao_Test {
         try {
             System.out.println("Cấu hình Chrome Driver với đường dẫn tải về: " + downloadPath);
             
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", downloadPath);
-        prefs.put("download.prompt_for_download", false);
-        prefs.put("safebrowsing.enabled", false);
-        prefs.put("download.directory_upgrade", true);
-        prefs.put("browser.download.folderList", 2);
-        prefs.put("browser.download.manager.showWhenStarting", false);
-        prefs.put("browser.helperApps.neverAsk.saveToDisk", 
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
-            "application/vnd.ms-excel,application/x-excel,application/x-msexcel");
+            Map<String, Object> prefs = new HashMap<>();
+            prefs.put("download.default_directory", downloadPath);
+            prefs.put("download.prompt_for_download", false);
+            prefs.put("safebrowsing.enabled", false);
+            prefs.put("download.directory_upgrade", true);
+            prefs.put("browser.download.folderList", 2);
+            prefs.put("browser.download.manager.showWhenStarting", false);
+            prefs.put("browser.helperApps.neverAsk.saveToDisk", 
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
+                "application/vnd.ms-excel,application/x-excel,application/x-msexcel," +
+                "application/octet-stream");
 
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("prefs", prefs);
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--disable-popup-blocking");
-        options.addArguments("--disable-notifications");
-        options.addArguments("--safebrowsing-disable-download-protection");
-        options.addArguments("--disable-web-security");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
+            ChromeOptions options = new ChromeOptions();
+            options.setExperimentalOption("prefs", prefs);
+            options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--disable-popup-blocking");
+            options.addArguments("--disable-notifications");
+            options.addArguments("--safebrowsing-disable-download-protection");
+            options.addArguments("--disable-web-security");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--headless=new");
             options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1080");
+            options.addArguments("--start-maximized");
             
+            // Thêm tham số để đảm bảo tải file trong headless mode
+            options.addArguments("--disable-gpu-sandbox");
+            options.addArguments("--disable-software-rasterizer");
+            options.addArguments("--disable-extensions");
+            options.addArguments("--disable-infobars");
+            options.addArguments("--disable-browser-side-navigation");
+            options.addArguments("--disable-features=VizDisplayCompositor");
+            options.addArguments("--disable-features=IsolateOrigins,site-per-process");
+            options.addArguments("--disable-site-isolation-trials");
+            options.addArguments("--disable-features=DownloadBubble,DownloadBubbleV2");
+            options.addArguments("--disable-features=DownloadNotification");
+            options.addArguments("--disable-features=DownloadBubble");
+            options.addArguments("--disable-features=DownloadBubbleV2");
+            options.addArguments("--disable-features=DownloadNotification");
+            options.addArguments("--disable-features=DownloadBubble");
+            options.addArguments("--disable-features=DownloadBubbleV2");
+            options.addArguments("--disable-features=DownloadNotification");
+
             // Xác định môi trường chạy
             boolean isCI = false;
             String osName = System.getProperty("os.name").toLowerCase();
@@ -236,12 +257,12 @@ public class BaoCaoVao_Test {
             options.setBinary(chromeBinary);
 
             System.out.println("Khởi tạo Chrome Driver...");
-        driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-        baocaocao_Page = new BaoCaoVao_Page(driver);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            baocaocao_Page = new BaoCaoVao_Page(driver);
+            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             System.out.println("✅ Khởi tạo Chrome Driver thành công");
             
         } catch (Exception e) {
@@ -331,11 +352,15 @@ public class BaoCaoVao_Test {
         boolean fileDownloaded = false;
         File downloadedFile = null;
         int maxAttempts = 30;
+        String expectedFileName = "Báo cáo vào ra.xlsx"; // Thay đổi tên file theo đúng tên file tải về
 
         for (int i = 0; i < maxAttempts && !fileDownloaded; i++) {
             Thread.sleep(2000);
+            System.out.println("⏳ Kiểm tra lần " + (i + 1) + "/" + maxAttempts);
+            
             File[] files = new File(downloadPath).listFiles(
-                (dir, name) -> name.toLowerCase().endsWith(".xlsx") || 
+                (dir, name) -> name.equals(expectedFileName) || 
+                             name.toLowerCase().endsWith(".xlsx") || 
                              name.toLowerCase().endsWith(".xls"));
             
             if (files != null && files.length > 0) {
@@ -343,13 +368,20 @@ public class BaoCaoVao_Test {
                     if (file.length() > 0) {
                         fileDownloaded = true;
                         downloadedFile = file;
+                        System.out.println("✅ Tìm thấy file: " + file.getName() + " (" + file.length() + " bytes)");
                         break;
                     }
                 }
             }
             
             if (!fileDownloaded) {
-                System.out.println("⏳ Lần kiểm tra thứ " + (i + 1) + "/" + maxAttempts);
+                System.out.println("📁 Nội dung thư mục tải về:");
+                File[] allFiles = new File(downloadPath).listFiles();
+                if (allFiles != null) {
+                    for (File file : allFiles) {
+                        System.out.println("   - " + file.getName() + " (" + file.length() + " bytes)");
+                    }
+                }
             }
         }
 
