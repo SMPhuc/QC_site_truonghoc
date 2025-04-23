@@ -93,6 +93,13 @@ jobs:
         name: allure-report
         path: allure-results
 
+    - name: Prepare GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      run: |
+        mkdir -p ./build/reports/allure-report
+        touch ./build/reports/allure-report/.nojekyll
+        echo "✅ Đã tạo file .nojekyll"
+
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
@@ -102,14 +109,6 @@ jobs:
         publish_branch: gh-pages
         force_orphan: true
         commit_message: "Update Allure Report [skip ci]"
-
-    - name: Add .nojekyll file
-      if: github.ref == 'refs/heads/main'
-      run: |
-        touch ./build/reports/allure-report/.nojekyll
-        git add ./build/reports/allure-report/.nojekyll
-        git commit -m "Add .nojekyll file [skip ci]"
-        git push
 
   dependency-submission:
     runs-on: ubuntu-latest
