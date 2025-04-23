@@ -112,10 +112,16 @@ jobs:
         # Tạo thư mục nếu chưa tồn tại
         mkdir -p ./build/reports/allure-report
         touch ./build/reports/allure-report/.nojekyll
-        echo "✅ Đã tạo file .nojekyll"
         
         # Copy nội dung từ allure-results
         cp -r allure-results/* ./build/reports/allure-report/
+        
+        # Tạo file index.html nếu chưa tồn tại
+        if [ ! -f "./build/reports/allure-report/index.html" ]; then
+            echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0; url=./allure-report/index.html'></head></html>" > ./build/reports/allure-report/index.html
+        fi
+        
+        echo "✅ Đã tạo file .nojekyll và index.html"
         echo "📁 Kiểm tra lại thư mục sau khi chuẩn bị:"
         ls -la ./build/reports/allure-report/
 

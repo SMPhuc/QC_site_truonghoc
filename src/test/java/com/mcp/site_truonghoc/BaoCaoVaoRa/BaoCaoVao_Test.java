@@ -107,6 +107,13 @@ public class BaoCaoVao_Test {
                 for (File file : files) {
                     if(file.delete()) {
                         System.out.println("✅ Đã xóa file: " + file.getName());
+                    } else {
+                        System.out.println("⚠️ Không thể xóa file: " + file.getName());
+                        // Thử đổi tên file nếu không xóa được
+                        File renamedFile = new File(file.getParent(), "old_" + file.getName());
+                        if(file.renameTo(renamedFile)) {
+                            System.out.println("✅ Đã đổi tên file: " + file.getName() + " -> " + renamedFile.getName());
+                        }
                     }
                 }
             }
@@ -358,10 +365,11 @@ public class BaoCaoVao_Test {
     private void verifyFileDownload() throws InterruptedException {
         boolean fileDownloaded = false;
         File downloadedFile = null;
-        int maxAttempts = 10;
+        int maxAttempts = 10; // Tăng số lần kiểm tra
+        int waitTime = 2000; // Thời gian chờ giữa các lần kiểm tra
 
         for (int i = 0; i < maxAttempts && !fileDownloaded; i++) {
-            Thread.sleep(2000);
+            Thread.sleep(waitTime);
             System.out.println("⏳ Kiểm tra lần " + (i + 1) + "/" + maxAttempts);
             
             File[] files = new File(downloadPath).listFiles(
@@ -375,6 +383,8 @@ public class BaoCaoVao_Test {
                         downloadedFile = file;
                         System.out.println("✅ Tìm thấy file Excel: " + file.getName() + " (" + file.length() + " bytes)");
                         break;
+                    } else {
+                        System.out.println("⚠️ File rỗng: " + file.getName());
                     }
                 }
             }
@@ -386,6 +396,8 @@ public class BaoCaoVao_Test {
                     for (File file : allFiles) {
                         System.out.println("   - " + file.getName() + " (" + file.length() + " bytes)");
                     }
+                } else {
+                    System.out.println("   - Thư mục trống");
                 }
             }
         }
@@ -404,6 +416,9 @@ public class BaoCaoVao_Test {
 
         System.out.println("✅ Tải file thành công: " + downloadedFile.getName());
         System.out.println("📊 Kích thước file: " + downloadedFile.length() + " bytes");
+        
+        // Thêm thời gian chờ sau khi tải file thành công
+        Thread.sleep(2000);
         
         System.out.println("\n=== KẾT THÚC TEST CASE - THÀNH CÔNG ===\n");
     }
