@@ -2,8 +2,12 @@ package com.mcp.site_truonghoc.BaoCaoVaoRa;
 
 import com.mcp.site_truonghoc.LoginMethod;
 import com.mcp.site_truonghoc.config.ConfigManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
@@ -15,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaoCaoVaoRa_Test {
-    private ChromeDriver driver;
-    private BaoCaoVaoRa_Page baocaocaora_Page;
+    private WebDriver driver;
     private WebDriverWait wait;
+    private BaoCaoVaoRa_Page baoCaoVaoRaPage;
 
     private final String downloadPath = getDownloadPath();
 
@@ -60,45 +64,101 @@ public class BaoCaoVaoRa_Test {
     }
 
     @BeforeClass
-    public void setUpClass() {
-        System.out.println("\n=== CHUẨN BỊ MÔI TRƯỜNG TEST ===");
-        System.out.println("🌐 Base URL: " + ConfigManager.getBaseUrl());
-        System.out.println("===========================\n");
-
-        // Kiểm tra và tạo thư mục downloads nếu chưa tồn tại
-        File downloadDir = new File(downloadPath);
-        if (!downloadDir.exists()) {
-            System.out.println("Thư mục tải về chưa tồn tại, đang tạo mới...");
-            if (downloadDir.mkdirs()) {
-                System.out.println("✅ Đã tạo thư mục tải về thành công");
-            } else {
-                System.err.println("❌ Không thể tạo thư mục tải về");
-                throw new RuntimeException("Không thể tạo thư mục tải về: " + downloadPath);
-            }
+    public void setup() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        String projectDir = System.getProperty("user.dir");
+        String chromeDriverPath;
+        
+        if (osName.contains("windows")) {
+            chromeDriverPath = projectDir + File.separator + "chromedriver-win64" + 
+                File.separator + "135.0.7049.95" + File.separator + "chromedriver.exe";
         } else {
-            System.out.println("✅ Thư mục tải về đã tồn tại");
-            System.out.println("===========================\n");
+            chromeDriverPath = projectDir + File.separator + "chromedriver-linux64" + 
+                File.separator + "chromedriver";
         }
-
-        cleanDownloadDirectory();
+        
+        System.out.println("Sử dụng ChromeDriver tại: " + chromeDriverPath);
+        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+        
+        // Khởi tạo ChromeOptions
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--disable-popup-blocking");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--safebrowsing-disable-download-protection");
+        options.addArguments("--disable-web-security");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless=new"); // Chạy ở chế độ không hiển thị
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--start-maximized");
+        
+        // Cấu hình download
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("download.default_directory", downloadPath);
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("safebrowsing.enabled", false);
+        prefs.put("download.directory_upgrade", true);
+        prefs.put("browser.download.folderList", 2);
+        prefs.put("browser.download.manager.showWhenStarting", false);
+        prefs.put("browser.helperApps.neverAsk.saveToDisk", 
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
+            "application/vnd.ms-excel,application/x-excel,application/x-msexcel," +
+            "application/octet-stream");
+        options.setExperimentalOption("prefs", prefs);
+        
+        driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        baoCaoVaoRaPage = new BaoCaoVaoRa_Page(driver);
     }
 
     @BeforeMethod
     public void setUp() {
-        System.out.println("\n🔄 Khởi tạo trình duyệt mới...");
-        initializeChromeDriver();
+        // Không cần khởi tạo lại ChromeDriver
+        System.out.println("\n🔄 Đang chuẩn bị test case...");
     }
 
     @AfterMethod
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        try {
+            // Đăng xuất trước khi kết thúc test case
+            System.out.println("\n🔄 Đang đăng xuất...");
+            performLogout();
+            System.out.println("✅ Đã đăng xuất thành công");
+        } catch (Exception e) {
+            System.out.println("⚠️ Không thể đăng xuất: " + e.getMessage());
+        }
+        System.out.println("\n🔄 Đã hoàn thành test case");
+    }
+
+    private void performLogout() {
+        try {
+            // Click vào nút hồ sơ
+            WebElement profileButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[title='Hồ sơ']")));
+            profileButton.click();
+            Thread.sleep(1000);
+
+            // Click vào nút đăng xuất
+            WebElement logoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("li[class*='logout']")));
+            logoutButton.click();
+            Thread.sleep(1000);
+
+            // Đợi cho đến khi URL chứa "/#"
+            wait.until(ExpectedConditions.urlContains("/#"));
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể đăng xuất: " + e.getMessage());
         }
     }
 
     @AfterClass
     public void tearDownClass() {
         System.out.println("\n=== KẾT THÚC TẤT CẢ TEST CASE ===");
+        if (driver != null) {
+            driver.quit();
+        }
         cleanDownloadDirectory();
     }
 
@@ -122,165 +182,6 @@ public class BaoCaoVaoRa_Test {
                     }
                 }
             }
-        }
-    }
-
-    private void initializeChromeDriver() {
-        try {
-            System.out.println("Cấu hình Chrome Driver với đường dẫn tải về: " + downloadPath);
-
-            Map<String, Object> prefs = new HashMap<>();
-            prefs.put("download.default_directory", downloadPath);
-            prefs.put("download.prompt_for_download", false);
-            prefs.put("safebrowsing.enabled", false);
-            prefs.put("download.directory_upgrade", true);
-            prefs.put("browser.download.folderList", 2);
-            prefs.put("browser.download.manager.showWhenStarting", false);
-            prefs.put("browser.helperApps.neverAsk.saveToDisk",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
-                            "application/vnd.ms-excel,application/x-excel,application/x-msexcel," +
-                            "application/octet-stream");
-
-            ChromeOptions options = new ChromeOptions();
-            options.setExperimentalOption("prefs", prefs);
-            options.addArguments("--remote-allow-origins=*");
-            options.addArguments("--disable-popup-blocking");
-            options.addArguments("--disable-notifications");
-            options.addArguments("--safebrowsing-disable-download-protection");
-            options.addArguments("--disable-web-security");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--headless=new");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--window-size=1920,1080");
-            options.addArguments("--start-maximized");
-
-            // Thêm tham số để đảm bảo tải file trong headless mode
-            options.addArguments("--disable-gpu-sandbox");
-            options.addArguments("--disable-software-rasterizer");
-            options.addArguments("--disable-extensions");
-            options.addArguments("--disable-infobars");
-            options.addArguments("--disable-browser-side-navigation");
-            options.addArguments("--disable-features=VizDisplayCompositor");
-            options.addArguments("--disable-features=IsolateOrigins,site-per-process");
-            options.addArguments("--disable-site-isolation-trials");
-            options.addArguments("--disable-features=DownloadBubble,DownloadBubbleV2");
-            options.addArguments("--disable-features=DownloadNotification");
-            options.addArguments("--disable-features=DownloadBubble");
-            options.addArguments("--disable-features=DownloadBubbleV2");
-            options.addArguments("--disable-features=DownloadNotification");
-            options.addArguments("--disable-features=DownloadBubble");
-            options.addArguments("--disable-features=DownloadBubbleV2");
-            options.addArguments("--disable-features=DownloadNotification");
-
-            // Xác định môi trường chạy
-            boolean isCI = false;
-            String osName = System.getProperty("os.name").toLowerCase();
-            String ciEnv = System.getenv("CI");
-            String githubActions = System.getenv("GITHUB_ACTIONS");
-            String runnerTemp = System.getenv("RUNNER_TEMP");
-
-            System.out.println("=== THÔNG TIN MÔI TRƯỜNG ===");
-            System.out.println("Hệ điều hành: " + osName);
-            System.out.println("CI: " + ciEnv);
-            System.out.println("GITHUB_ACTIONS: " + githubActions);
-            System.out.println("RUNNER_TEMP: " + runnerTemp);
-
-            if ((ciEnv != null && ciEnv.equals("true")) ||
-                    (githubActions != null && githubActions.equals("true")) ||
-                    (runnerTemp != null)) {
-                isCI = true;
-                System.out.println("🔄 Đang chạy trong môi trường CI");
-            } else {
-                System.out.println("🔄 Đang chạy trong môi trường local");
-            }
-
-            // Xác định đường dẫn ChromeDriver
-            String chromeDriverPath;
-            if (isCI) {
-                // Trên CI
-                chromeDriverPath = "/usr/local/bin/chromedriver";
-                System.out.println("Sử dụng ChromeDriver tại: " + chromeDriverPath);
-            } else {
-                // Trên local
-                String projectDir = System.getProperty("user.dir");
-                if (osName.contains("windows")) {
-                    chromeDriverPath = projectDir + File.separator + "chromedriver-win64" +
-                            File.separator + "135.0.7049.95" + File.separator + "chromedriver.exe";
-                } else {
-                    chromeDriverPath = projectDir + File.separator + "chromedriver-linux64" +
-                            File.separator + "chromedriver";
-                }
-                System.out.println("Sử dụng ChromeDriver tại: " + chromeDriverPath);
-            }
-
-            File chromeDriverFile = new File(chromeDriverPath);
-            if (chromeDriverFile.exists()) {
-                System.out.println("✅ Tìm thấy ChromeDriver tại: " + chromeDriverPath);
-                System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-            } else {
-                System.err.println("❌ Không tìm thấy ChromeDriver tại: " + chromeDriverPath);
-                throw new RuntimeException("Không tìm thấy ChromeDriver");
-            }
-
-            // Xác định Chrome binary
-            String chromeBinary = null;
-            if (isCI) {
-                // Trên CI
-                chromeBinary = "/usr/bin/google-chrome";
-                System.out.println("Sử dụng Chrome tại: " + chromeBinary);
-            } else {
-                // Trên local
-                String[] possiblePaths;
-                if (osName.contains("windows")) {
-                    possiblePaths = new String[] {
-                            System.getenv("LOCALAPPDATA") + "\\Google\\Chrome\\Application\\chrome.exe",
-                            System.getenv("PROGRAMFILES") + "\\Google\\Chrome\\Application\\chrome.exe",
-                            System.getenv("PROGRAMFILES(X86)") + "\\Google\\Chrome\\Application\\chrome.exe",
-                            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-                            "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-                    };
-                } else {
-                    possiblePaths = new String[] {
-                            "/usr/bin/google-chrome",
-                            "/usr/bin/chromium-browser",
-                            "/usr/bin/chromium"
-                    };
-                }
-
-                for (String path : possiblePaths) {
-                    if (path != null) {
-                        File chromeFile = new File(path);
-                        if (chromeFile.exists()) {
-                            chromeBinary = path;
-                            System.out.println("✅ Tìm thấy Chrome tại: " + chromeBinary);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (chromeBinary == null) {
-                System.err.println("❌ Không tìm thấy Chrome trong các đường dẫn mặc định");
-                throw new RuntimeException("Không tìm thấy Chrome browser. Vui lòng cài đặt Chrome.");
-            }
-
-            System.out.println("Thiết lập Chrome binary: " + chromeBinary);
-            options.setBinary(chromeBinary);
-
-            System.out.println("Khởi tạo Chrome Driver...");
-            driver = new ChromeDriver(options);
-            driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-            baocaocaora_Page = new BaoCaoVaoRa_Page(driver);
-            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            System.out.println("✅ Khởi tạo Chrome Driver thành công");
-
-        } catch (Exception e) {
-            System.err.println("❌ Lỗi khởi tạo Chrome Driver: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Không thể khởi tạo Chrome Driver", e);
         }
     }
 
@@ -329,109 +230,58 @@ public class BaoCaoVaoRa_Test {
         }
     }
 
-    @Test(priority = 4, description = "Xuất báo cáo Excel với đầy đủ các bước")
-    public void testBaoCaoVaoRa_FullSteps() throws InterruptedException {
+    private void executeTest(String testDate) throws InterruptedException {
         try {
-            System.out.println("\n=== TEST CASE 4: XUẤT BÁO CÁO ĐẦY ĐỦ CÁC BƯỚC ===");
-            
-            // 1. Đăng nhập
-            System.out.println("\n1️⃣ ĐĂNG NHẬP HỆ THỐNG");
+
             LoginMethod.login(driver);
             Thread.sleep(2000);
-            System.out.println("✅ Đăng nhập thành công");
 
-            // 2. Truy cập trang báo cáo
+
             System.out.println("\n2️⃣ TRUY CẬP TRANG BÁO CÁO");
             System.out.println("➡️ Điều hướng đến trang báo cáo vào/ra");
-            System.out.println("🌐 URL báo cáo: " + ConfigManager.getReportInUrl());
-            driver.get(ConfigManager.getReportInUrl());
+            System.out.println("🌐 URL báo cáo: " + ConfigManager.getUrl("report.inOutUrl"));
+            driver.get(ConfigManager.getUrl("report.inOutUrl"));
             Thread.sleep(2000);
             System.out.println("✅ Đã vào trang báo cáo");
 
-            // 3. Chọn ngày bắt đầu và kết thúc
-            System.out.println("\n3️⃣ CHỌN NGÀY BÁO CÁO");
-            String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            System.out.println("➡️ Nhập ngày bắt đầu: " + currentDate);
-            baocaocaora_Page.inputUndefinedFromDate.clear();
-            baocaocaora_Page.inputUndefinedFromDate.sendKeys(currentDate);
-            Thread.sleep(1000);
-            
-            System.out.println("➡️ Nhập ngày kết thúc: " + currentDate);
-            baocaocaora_Page.inputUndefinedDate.clear();
-            baocaocaora_Page.inputUndefinedDate.sendKeys(currentDate);
-            Thread.sleep(2000);
-            System.out.println("✅ Đã nhập ngày báo cáo");
-
-            // 4. Chọn phòng ban
-            System.out.println("\n4️⃣ CHỌN PHÒNG BAN");
+            System.out.println("\n3️⃣ CHỌN PHÒNG BAN");
             System.out.println("➡️ Click vào label Chọn tất cả");
-            baocaocaora_Page.label.click();
+            baoCaoVaoRaPage.label.click();
             Thread.sleep(1500);
             System.out.println("✅ Đã chọn phòng ban");
 
-            // 5. Chọn sự kiện điểm danh sáng
+            System.out.println("\n4️⃣ NHẬP NGÀY BÁO CÁO");
+            System.out.println("➡️ Xóa dữ liệu cũ và nhập ngày: " + testDate);
+            baoCaoVaoRaPage.inputUndefinedDate.clear();
+            baoCaoVaoRaPage.inputUndefinedDate.sendKeys(testDate);
+            Thread.sleep(3000);
+            System.out.println("✅ Đã nhập ngày báo cáo");
+
             System.out.println("\n5️⃣ CHỌN SỰ KIỆN ĐIỂM DANH SÁNG");
+            System.out.println("➡️ Click vào input sự kiện");
+            baoCaoVaoRaPage.inputEvent.click();
+            Thread.sleep(1000);
             System.out.println("➡️ Click vào sự kiện điểm danh sáng");
-            baocaocaora_Page.DiemDanhSang.click();
+            baoCaoVaoRaPage.DiemDanhSang.click();
             Thread.sleep(1500);
             System.out.println("✅ Đã chọn sự kiện điểm danh sáng");
 
-            // 6. Xuất Excel
             System.out.println("\n6️⃣ XUẤT BÁO CÁO EXCEL");
             System.out.println("➡️ Click nút xuất Excel");
-            baocaocaora_Page.spanExcel.click();
+            baoCaoVaoRaPage.spanExcel.click();
             System.out.println("✅ Đã click nút xuất Excel");
             Thread.sleep(3000);
 
-            // 7. Kiểm tra file tải về
             System.out.println("\n7️⃣ KIỂM TRA FILE TẢI VỀ");
             System.out.println("➡️ Thư mục tải về: " + downloadPath);
-            verifyFileDownload();
 
+            verifyFileDownload();
         } catch (Exception e) {
             System.err.println("\n❌ LỖI TRONG QUÁ TRÌNH KIỂM THỬ");
             System.err.println("Chi tiết lỗi: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
-    }
-
-    private void executeTest(String testDate) throws InterruptedException {
-        System.out.println("\n1️⃣ ĐĂNG NHẬP HỆ THỐNG");
-        LoginMethod.login(driver);
-        Thread.sleep(2000);
-        System.out.println("✅ Đăng nhập thành công");
-
-        System.out.println("\n2️⃣ TRUY CẬP TRANG BÁO CÁO");
-        System.out.println("➡️ Điều hướng đến trang báo cáo vào/ra");
-        System.out.println("🌐 URL báo cáo: " + ConfigManager.getReportInUrl());
-        driver.get(ConfigManager.getReportInUrl());
-        Thread.sleep(2000);
-        System.out.println("✅ Đã vào trang báo cáo");
-
-        System.out.println("\n3️⃣ CHỌN PHÒNG BAN");
-        System.out.println("➡️ Click vào label Chọn tất cả");
-        baocaocaora_Page.label.click();
-        Thread.sleep(1500);
-        System.out.println("✅ Đã chọn phòng ban");
-
-        System.out.println("\n4️⃣ NHẬP NGÀY BÁO CÁO");
-        System.out.println("➡️ Xóa dữ liệu cũ và nhập ngày: " + testDate);
-        baocaocaora_Page.inputUndefinedDate.clear();
-        baocaocaora_Page.inputUndefinedDate.sendKeys(testDate);
-        Thread.sleep(3000);
-        System.out.println("✅ Đã nhập ngày báo cáo");
-
-        System.out.println("\n5️⃣ XUẤT BÁO CÁO EXCEL");
-        System.out.println("➡️ Click nút xuất Excel");
-        baocaocaora_Page.spanExcel.click();
-        System.out.println("✅ Đã click nút xuất Excel");
-        Thread.sleep(3000);
-
-        System.out.println("\n6️⃣ KIỂM TRA FILE TẢI VỀ");
-        System.out.println("➡️ Thư mục tải về: " + downloadPath);
-
-        verifyFileDownload();
     }
 
     private void verifyFileDownload() throws InterruptedException {
