@@ -71,37 +71,6 @@ jobs:
         cp build/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html gp-page/
         echo "📊 Đã sao chép báo cáo test vào thư mục gp-page"
 
-    - name: Generate Allure Report
-      if: always()
-      run: |
-        ./gradlew allureReport
-        echo "📊 Kiểm tra thư mục Allure Report:"
-        ls -la build/reports/allure-report/
-        
-        # Tạo file .nojekyll để GitHub Pages không bỏ qua các file bắt đầu bằng _
-        touch build/reports/allure-report/.nojekyll
-        
-        # Tạo file index.html nếu chưa tồn tại
-        if [ ! -f "build/reports/allure-report/index.html" ]; then
-          cp build/reports/allure-report/data/index.html build/reports/allure-report/index.html
-        fi
-
-    - name: Store Allure results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-results
-        path: build/allure-results
-        retention-days: 30
-
-    - name: Store Allure report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: build/reports/allure-report
-        retention-days: 30
-
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
@@ -113,14 +82,14 @@ jobs:
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         commit_message: |
-          Deploy Allure Report
+          Deploy Test Report
           From commit: ${{ github.sha }}
           Workflow: ${{ github.workflow }}
 
     - name: Post the link to the report
       if: always()
       run: |
-        echo "::notice::🔍 Allure Report đã được deploy tại: https://smphuc.github.io/QC_site_truonghoc/"
+        echo "::notice::🔍 Báo cáo test đã được deploy tại: https://smphuc.github.io/QC_site_truonghoc/"
         echo "⏳ Vui lòng đợi 1-2 phút để GitHub Pages cập nhật."
 
   dependency-submission:
