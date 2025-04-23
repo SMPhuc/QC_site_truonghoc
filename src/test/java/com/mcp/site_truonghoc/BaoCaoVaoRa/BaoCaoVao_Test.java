@@ -75,7 +75,6 @@ public class BaoCaoVao_Test {
             System.out.println("✅ Thư mục tải về đã tồn tại");
         }
         
-        // Xóa các file Excel cũ trong thư mục downloads
         cleanDownloadDirectory();
     }
 
