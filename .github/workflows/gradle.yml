@@ -79,6 +79,14 @@ jobs:
           fi
         done
 
+    - name: Verify Allure Report Directory
+      continue-on-error: true
+      run: |
+        echo "📁 Kiểm tra thư mục Allure Report:"
+        ls -la build/reports/allure-report/
+        echo "📊 Thông tin chi tiết các file trong report:"
+        find build/reports/allure-report/ -type f -exec ls -la {} \;
+
     - name: Prepare Allure Results
       continue-on-error: true
       run: |
@@ -96,9 +104,13 @@ jobs:
     - name: Prepare GitHub Pages
       if: github.ref == 'refs/heads/main'
       run: |
+        echo "📁 Kiểm tra thư mục trước khi deploy:"
+        ls -la build/reports/allure-report/
         mkdir -p ./build/reports/allure-report
         touch ./build/reports/allure-report/.nojekyll
         echo "✅ Đã tạo file .nojekyll"
+        echo "📁 Kiểm tra lại thư mục sau khi chuẩn bị:"
+        ls -la ./build/reports/allure-report/
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
