@@ -352,7 +352,7 @@ public class BaoCaoVao_Test {
     private void verifyFileDownload() throws InterruptedException {
         boolean fileDownloaded = false;
         File downloadedFile = null;
-        int maxAttempts = 30;
+        int maxAttempts = 10;
 
         for (int i = 0; i < maxAttempts && !fileDownloaded; i++) {
             Thread.sleep(2000);
