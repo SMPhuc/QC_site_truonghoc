@@ -1,0 +1,24 @@
+task copyTestReport(type: Copy) {
+    def sourceReport = file("${buildDir}/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html")
+    def targetDir = file("${projectDir}/gp-page")
+    
+    doFirst {
+        if (!sourceReport.exists()) {
+            throw new GradleException("Test report file not found at ${sourceReport}")
+        }
+        if (!targetDir.exists()) {
+            targetDir.mkdirs()
+        }
+    }
+    
+    from sourceReport
+    into targetDir
+    rename { String fileName ->
+        fileName // Giữ nguyên tên file gốc
+    }
+}
+
+// Chỉ thực hiện copy khi chạy trên GitHub Actions
+if (System.getenv('CI') == 'true') {
+    test.finalizedBy copyTestReport
+} 

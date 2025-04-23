@@ -64,6 +64,13 @@ jobs:
         echo "📊 Kết quả build và test:"
         ls -la build/reports/tests/test/
 
+    - name: Copy Test Report to gp-page
+      if: always()
+      run: |
+        mkdir -p gp-page
+        cp build/reports/tests/test/classes/com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test.html gp-page/
+        echo "📊 Đã sao chép báo cáo test vào thư mục gp-page"
+
     - name: Generate Allure Report
       if: always()
       run: |
