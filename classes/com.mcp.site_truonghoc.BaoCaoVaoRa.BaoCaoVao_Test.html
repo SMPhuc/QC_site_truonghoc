@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.mcp.site_truonghoc.BaoCaoVaoRa.html">com.mcp.site_truonghoc.BaoCaoVaoRa</a> &gt; BaoCaoVao_Test</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1m29.56s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testBaoCaoVaoRa_NgayHienTai</td>
+<td class="success">29.483s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testBaoCaoVaoRa_NgayQuaKhu</td>
+<td class="success">29.342s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testBaoCaoVaoRa_NgayTuongLai</td>
+<td class="success">30.732s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>
+=== CHUẨN BỊ MÔI TRƯỜNG TEST ===
+&#x1f310; Base URL: https://uat-truonghoc.vinaid.vn
+===========================
+
+✅ Thư mục tải về đã tồn tại
+===========================
+
+
+&#x1f504; Khởi tạo trình duyệt mới...
+Cấu hình Chrome Driver với đường dẫn tải về: /home/runner/work/QC_site_truonghoc/QC_site_truonghoc/downloads
+=== THÔNG TIN MÔI TRƯỜNG ===
+Hệ điều hành: linux
+CI: true
+GITHUB_ACTIONS: true
+RUNNER_TEMP: /home/runner/work/_temp
+&#x1f504; Đang chạy trong môi trường CI
+Sử dụng ChromeDriver tại: /usr/local/bin/chromedriver
+✅ Tìm thấy ChromeDriver tại: /usr/local/bin/chromedriver
+Sử dụng Chrome tại: /usr/bin/google-chrome
+Thiết lập Chrome binary: /usr/bin/google-chrome
+Khởi tạo Chrome Driver...
+✅ Khởi tạo Chrome Driver thành công
+
+=== TEST CASE 1: XUẤT BÁO CÁO NGÀY TƯƠNG LAI ===
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+➡️ Thực hiện đăng nhập với tài khoản: admin@64
+&#x1f310; Truy cập trang đăng nhập: https://uat-truonghoc.vinaid.vn/#/
+⏳ Đang đợi trường tên đăng nhập...
+✅ Đã nhập tên đăng nhập: admin@64
+⏳ Đang đợi trường mật khẩu...
+✅ Đã nhập mật khẩu
+⏳ Đang đợi nút đăng nhập...
+✅ Đã click nút đăng nhập
+✅ Đăng nhập thành công
+✅ Đăng nhập thành công
+
+2️⃣ TRUY CẬP TRANG BÁO CÁO
+➡️ Điều hướng đến trang báo cáo vào/ra
+&#x1f310; URL báo cáo: https://uat-truonghoc.vinaid.vn/#/inReport
+✅ Đã vào trang báo cáo
+
+3️⃣ CHỌN PHÒNG BAN
+➡️ Click vào label Chọn tất cả
+✅ Đã chọn phòng ban
+
+4️⃣ NHẬP NGÀY BÁO CÁO
+➡️ Xóa dữ liệu cũ và nhập ngày: 25-04-2025
+✅ Đã nhập ngày báo cáo
+
+5️⃣ XUẤT BÁO CÁO EXCEL
+➡️ Click nút xuất Excel
+✅ Đã click nút xuất Excel
+
+6️⃣ KIỂM TRA FILE TẢI VỀ
+➡️ Thư mục tải về: /home/runner/work/QC_site_truonghoc/QC_site_truonghoc/downloads
+&#x1f504; Đang chạy trong môi trường CI
+
+=== TEST CASE 2: XUẤT BÁO CÁO NGÀY HIỆN TẠI ===
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+➡️ Thực hiện đăng nhập với tài khoản: admin@64
+&#x1f310; Truy cập trang đăng nhập: https://uat-truonghoc.vinaid.vn/#/
+⏳ Đang đợi trường tên đăng nhập...
+✅ Đã nhập tên đăng nhập: admin@64
+⏳ Đang đợi trường mật khẩu...
+✅ Đã nhập mật khẩu
+⏳ Đang đợi nút đăng nhập...
+✅ Đã click nút đăng nhập
+✅ Đăng nhập thành công
+✅ Đăng nhập thành công
+
+2️⃣ TRUY CẬP TRANG BÁO CÁO
+➡️ Điều hướng đến trang báo cáo vào/ra
+&#x1f310; URL báo cáo: https://uat-truonghoc.vinaid.vn/#/inReport
+✅ Đã vào trang báo cáo
+
+3️⃣ CHỌN PHÒNG BAN
+➡️ Click vào label Chọn tất cả
+✅ Đã chọn phòng ban
+
+4️⃣ NHẬP NGÀY BÁO CÁO
+➡️ Xóa dữ liệu cũ và nhập ngày: 23-04-2025
+✅ Đã nhập ngày báo cáo
+
+5️⃣ XUẤT BÁO CÁO EXCEL
+➡️ Click nút xuất Excel
+✅ Đã click nút xuất Excel
+
+6️⃣ KIỂM TRA FILE TẢI VỀ
+➡️ Thư mục tải về: /home/runner/work/QC_site_truonghoc/QC_site_truonghoc/downloads
+&#x1f504; Đang chạy trong môi trường CI
+
+=== TEST CASE 3: XUẤT BÁO CÁO NGÀY QUÁ KHỨ ===
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+
+1️⃣ ĐĂNG NHẬP HỆ THỐNG
+➡️ Thực hiện đăng nhập với tài khoản: admin@64
+&#x1f310; Truy cập trang đăng nhập: https://uat-truonghoc.vinaid.vn/#/
+⏳ Đang đợi trường tên đăng nhập...
+✅ Đã nhập tên đăng nhập: admin@64
+⏳ Đang đợi trường mật khẩu...
+✅ Đã nhập mật khẩu
+⏳ Đang đợi nút đăng nhập...
+✅ Đã click nút đăng nhập
+✅ Đăng nhập thành công
+✅ Đăng nhập thành công
+
+2️⃣ TRUY CẬP TRANG BÁO CÁO
+➡️ Điều hướng đến trang báo cáo vào/ra
+&#x1f310; URL báo cáo: https://uat-truonghoc.vinaid.vn/#/inReport
+✅ Đã vào trang báo cáo
+
+3️⃣ CHỌN PHÒNG BAN
+➡️ Click vào label Chọn tất cả
+✅ Đã chọn phòng ban
+
+4️⃣ NHẬP NGÀY BÁO CÁO
+➡️ Xóa dữ liệu cũ và nhập ngày: 21-04-2025
+✅ Đã nhập ngày báo cáo
+
+5️⃣ XUẤT BÁO CÁO EXCEL
+➡️ Click nút xuất Excel
+✅ Đã click nút xuất Excel
+
+6️⃣ KIỂM TRA FILE TẢI VỀ
+➡️ Thư mục tải về: /home/runner/work/QC_site_truonghoc/QC_site_truonghoc/downloads
+&#x1f504; Đang chạy trong môi trường CI
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.8</a> at Apr 23, 2025, 11:04:38 AM</p>
+</div>
+</div>
+</body>
+</html>
