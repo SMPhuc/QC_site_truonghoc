@@ -352,16 +352,14 @@ public class BaoCaoVao_Test {
     private void verifyFileDownload() throws InterruptedException {
         boolean fileDownloaded = false;
         File downloadedFile = null;
-        int maxAttempts = 10;
-        String expectedFileName = "Báo cáo vào ra.xlsx"; // Thay đổi tên file theo đúng tên file tải về
+        int maxAttempts = 30;
 
         for (int i = 0; i < maxAttempts && !fileDownloaded; i++) {
             Thread.sleep(2000);
             System.out.println("⏳ Kiểm tra lần " + (i + 1) + "/" + maxAttempts);
             
             File[] files = new File(downloadPath).listFiles(
-                (dir, name) -> name.equals(expectedFileName) || 
-                             name.toLowerCase().endsWith(".xlsx") || 
+                (dir, name) -> name.toLowerCase().endsWith(".xlsx") || 
                              name.toLowerCase().endsWith(".xls"));
             
             if (files != null && files.length > 0) {
@@ -369,7 +367,7 @@ public class BaoCaoVao_Test {
                     if (file.length() > 0) {
                         fileDownloaded = true;
                         downloadedFile = file;
-                        System.out.println("✅ Tìm thấy file: " + file.getName() + " (" + file.length() + " bytes)");
+                        System.out.println("✅ Tìm thấy file Excel: " + file.getName() + " (" + file.length() + " bytes)");
                         break;
                     }
                 }

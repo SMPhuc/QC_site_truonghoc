@@ -100,6 +100,16 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build/reports/allure-report
         publish_branch: gh-pages
+        force_orphan: true
+        commit_message: "Update Allure Report [skip ci]"
+
+    - name: Add .nojekyll file
+      if: github.ref == 'refs/heads/main'
+      run: |
+        touch ./build/reports/allure-report/.nojekyll
+        git add ./build/reports/allure-report/.nojekyll
+        git commit -m "Add .nojekyll file [skip ci]"
+        git push
 
   dependency-submission:
     runs-on: ubuntu-latest
