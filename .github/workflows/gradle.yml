@@ -64,6 +64,12 @@ jobs:
         echo "📊 Kết quả build và test:"
         ls -la build/reports/tests/test/
         cat build/reports/tests/test/index.html
+        echo "📁 Kiểm tra thư mục build:"
+        ls -la build/
+        echo "📁 Kiểm tra thư mục reports:"
+        ls -la build/reports/
+        echo "📁 Kiểm tra thư mục allure-report:"
+        ls -la build/reports/allure-report/ || true
 
     - name: List Downloaded Files
       continue-on-error: true
@@ -78,14 +84,6 @@ jobs:
             echo "Permissions: $(stat -f%p "$file")"
           fi
         done
-
-    - name: Verify Allure Report Directory
-      continue-on-error: true
-      run: |
-        echo "📁 Kiểm tra thư mục Allure Report:"
-        ls -la build/reports/allure-report/
-        echo "📊 Thông tin chi tiết các file trong report:"
-        find build/reports/allure-report/ -type f -exec ls -la {} \;
 
     - name: Prepare Allure Results
       continue-on-error: true
@@ -104,11 +102,20 @@ jobs:
     - name: Prepare GitHub Pages
       if: github.ref == 'refs/heads/main'
       run: |
-        echo "📁 Kiểm tra thư mục trước khi deploy:"
-        ls -la build/reports/allure-report/
+        echo "📁 Kiểm tra thư mục build:"
+        ls -la build/
+        echo "📁 Kiểm tra thư mục reports:"
+        ls -la build/reports/
+        echo "📁 Kiểm tra thư mục allure-report:"
+        ls -la build/reports/allure-report/ || true
+        
+        # Tạo thư mục nếu chưa tồn tại
         mkdir -p ./build/reports/allure-report
         touch ./build/reports/allure-report/.nojekyll
         echo "✅ Đã tạo file .nojekyll"
+        
+        # Copy nội dung từ allure-results
+        cp -r allure-results/* ./build/reports/allure-report/
         echo "📁 Kiểm tra lại thư mục sau khi chuẩn bị:"
         ls -la ./build/reports/allure-report/
 

@@ -276,7 +276,9 @@ public class BaoCaoVao_Test {
     public void testBaoCaoVaoRa_NgayTuongLai() throws InterruptedException {
         try {
             System.out.println("\n=== TEST CASE 1: XUẤT BÁO CÁO NGÀY TƯƠNG LAI ===");
-            executeTest("23-04-2025");
+            // Lấy ngày hiện tại + 2 ngày
+            String futureDate = java.time.LocalDate.now().plusDays(2).format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            executeTest(futureDate);
         } catch (Exception e) {
             System.err.println("\n❌ LỖI TRONG QUÁ TRÌNH KIỂM THỬ");
             System.err.println("Chi tiết lỗi: " + e.getMessage());
@@ -289,7 +291,9 @@ public class BaoCaoVao_Test {
     public void testBaoCaoVaoRa_NgayHienTai() throws InterruptedException {
         try {
             System.out.println("\n=== TEST CASE 2: XUẤT BÁO CÁO NGÀY HIỆN TẠI ===");
-            executeTest(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            // Lấy ngày hiện tại
+            String currentDate = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            executeTest(currentDate);
         } catch (Exception e) {
             System.err.println("\n❌ LỖI TRONG QUÁ TRÌNH KIỂM THỬ");
             System.err.println("Chi tiết lỗi: " + e.getMessage());
@@ -302,7 +306,9 @@ public class BaoCaoVao_Test {
     public void testBaoCaoVaoRa_NgayQuaKhu() throws InterruptedException {
         try {
             System.out.println("\n=== TEST CASE 3: XUẤT BÁO CÁO NGÀY QUÁ KHỨ ===");
-            executeTest("01-01-2024");
+            // Lấy ngày hiện tại - 2 ngày
+            String pastDate = java.time.LocalDate.now().minusDays(2).format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            executeTest(pastDate);
         } catch (Exception e) {
             System.err.println("\n❌ LỖI TRONG QUÁ TRÌNH KIỂM THỬ");
             System.err.println("Chi tiết lỗi: " + e.getMessage());
