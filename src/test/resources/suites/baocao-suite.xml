@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Báo Cáo Test Suite" verbose="1">
+    <!-- Các tham số chung cho suite báo cáo -->
+    <parameter name="browser" value="chrome"/>
+    <parameter name="environment" value="test"/>
+    
+    <!-- Nhóm test cases -->
+    <test name="Báo Cáo Vào Ra Tests" preserve-order="true">
+        <groups>
+            <run>
+                <include name="baocao"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test">
+                <methods>
+                    <include name="testBaoCaoVaoRa_NgayTuongLai"/>
+                    <include name="testBaoCaoVaoRa_NgayHienTai"/>
+                    <include name="testBaoCaoVaoRa_NgayQuaKhu"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <!-- Có thể thêm các test khác liên quan đến báo cáo ở đây -->
+</suite> 

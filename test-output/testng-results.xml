@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="3" passed="3" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-04-22T00:08:00 ICT" name="All Test Suites" finished-at="2025-04-22T00:08:00 ICT" duration-ms="0">
+    <groups>
+    </groups>
+  </suite> <!-- All Test Suites -->
+  <suite started-at="2025-04-22T00:07:13 ICT" name="Báo Cáo Test Suite" finished-at="2025-04-22T00:08:00 ICT" duration-ms="46954">
+    <groups>
+      <group name="baocao">
+        <method signature="BaoCaoVao_Test.testBaoCaoVaoRa_NgayHienTai()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" name="testBaoCaoVaoRa_NgayHienTai" class="com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test"/>
+        <method signature="BaoCaoVao_Test.testBaoCaoVaoRa_NgayQuaKhu()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" name="testBaoCaoVaoRa_NgayQuaKhu" class="com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test"/>
+        <method signature="BaoCaoVao_Test.testBaoCaoVaoRa_NgayTuongLai()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" name="testBaoCaoVaoRa_NgayTuongLai" class="com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test"/>
+      </group> <!-- baocao -->
+    </groups>
+    <test started-at="2025-04-22T00:07:13 ICT" name="Báo Cáo Vào Ra Tests" finished-at="2025-04-22T00:08:00 ICT" duration-ms="46954">
+      <class name="com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test">
+        <test-method is-config="true" signature="setUpClass()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:13 ICT" name="setUpClass" finished-at="2025-04-22T00:07:13 ICT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUpClass -->
+        <test-method is-config="true" signature="setUp()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:13 ICT" name="setUp" finished-at="2025-04-22T00:07:15 ICT" duration-ms="2251" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="testBaoCaoVaoRa_NgayTuongLai()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:15 ICT" name="testBaoCaoVaoRa_NgayTuongLai" description="Xuất báo cáo Excel với ngày trong tương lai" finished-at="2025-04-22T00:07:30 ICT" duration-ms="14424" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testBaoCaoVaoRa_NgayTuongLai -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:30 ICT" name="tearDown" finished-at="2025-04-22T00:07:30 ICT" duration-ms="215" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method is-config="true" signature="setUp()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:30 ICT" name="setUp" finished-at="2025-04-22T00:07:31 ICT" duration-ms="1035" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="testBaoCaoVaoRa_NgayHienTai()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:31 ICT" name="testBaoCaoVaoRa_NgayHienTai" description="Xuất báo cáo Excel với ngày hiện tại" finished-at="2025-04-22T00:07:44 ICT" duration-ms="13371" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testBaoCaoVaoRa_NgayHienTai -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:44 ICT" name="tearDown" finished-at="2025-04-22T00:07:45 ICT" duration-ms="184" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method is-config="true" signature="setUp()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:45 ICT" name="setUp" finished-at="2025-04-22T00:07:46 ICT" duration-ms="939" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method signature="testBaoCaoVaoRa_NgayQuaKhu()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:07:46 ICT" name="testBaoCaoVaoRa_NgayQuaKhu" description="Xuất báo cáo Excel với ngày trong quá khứ" finished-at="2025-04-22T00:08:00 ICT" duration-ms="14252" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testBaoCaoVaoRa_NgayQuaKhu -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:08:00 ICT" name="tearDown" finished-at="2025-04-22T00:08:00 ICT" duration-ms="154" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method is-config="true" signature="tearDownClass()[pri:0, instance:com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test@1a4927d6]" started-at="2025-04-22T00:08:00 ICT" name="tearDownClass" finished-at="2025-04-22T00:08:00 ICT" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDownClass -->
+      </class> <!-- com.mcp.site_truonghoc.BaoCaoVaoRa.BaoCaoVao_Test -->
+    </test> <!-- Báo Cáo Vào Ra Tests -->
+  </suite> <!-- Báo Cáo Test Suite -->
+</testng-results>

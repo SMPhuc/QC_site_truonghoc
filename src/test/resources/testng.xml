@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="All Test Suites" parallel="tests" thread-count="2">
+    <!-- Cấu hình chung cho tất cả các suite -->
+    <listeners>
+        <listener class-name="org.testng.reporters.EmailableReporter"/>
+        <listener class-name="org.testng.reporters.XMLReporter"/>
+    </listeners>
+
+    <!-- Suite Báo Cáo -->
+    <suite-files>
+        <suite-file path="./suites/baocao-suite.xml"/>
+    </suite-files>
+
+    <!-- Có thể thêm các suite khác ở đây -->
+</suite> 
