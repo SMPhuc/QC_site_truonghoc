@@ -60,7 +60,7 @@ jobs:
     - name: Build and Test with Gradle
       continue-on-error: true
       run: |
-        ./gradlew build
+        ./gradlew build allureReport
         echo "📊 Kết quả build và test:"
         ls -la build/reports/tests/test/
         cat build/reports/tests/test/index.html
@@ -79,22 +79,13 @@ jobs:
           fi
         done
 
-    - name: Commit Downloaded Files
+    - name: Prepare Allure Results
       continue-on-error: true
       run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "GitHub Action"
-        git add downloads/
-        git status
-        git commit -m "Update downloads directory with test results [skip ci]"
-        git push
-
-    - name: Generate Allure Report
-      continue-on-error: true
-      run: |
-        ./gradlew allureReport
         mkdir -p allure-results
         cp -r build/allure-results/* allure-results/
+        echo "📊 Allure results đã được chuẩn bị:"
+        ls -la allure-results/
 
     - name: Upload Allure Report
       uses: actions/upload-artifact@v4
