@@ -327,7 +327,7 @@ public class BaoCaoVao_Test {
         System.out.println("\n3️⃣ CHỌN PHÒNG BAN");
         System.out.println("➡️ Click vào label Chọn tất cả");
         baocaocao_Page.Label_PhongBan.click();
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         System.out.println("✅ Đã chọn phòng ban");
         
         System.out.println("\n4️⃣ NHẬP NGÀY BÁO CÁO");

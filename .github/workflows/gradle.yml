@@ -63,6 +63,28 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
+    - name: List Downloaded Files
+      run: |
+        echo "📁 Nội dung thư mục downloads sau khi chạy test:"
+        ls -la downloads/
+        echo "📊 Thông tin chi tiết các file:"
+        for file in downloads/*; do
+          if [ -f "$file" ]; then
+            echo "File: $file"
+            echo "Size: $(stat -f%z "$file") bytes"
+            echo "Permissions: $(stat -f%p "$file")"
+          fi
+        done
+
+    - name: Commit Downloaded Files
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add downloads/
+        git status
+        git commit -m "Update downloads directory with test results [skip ci]"
+        git push
+
     - name: Generate Allure Report
       run: |
         ./gradlew allureReport
@@ -74,20 +96,6 @@ jobs:
       with:
         name: allure-report
         path: allure-results
-
-    - name: Setup Downloads Directory
-      run: |
-        mkdir -p downloads
-        echo "Test file created during CI" > downloads/test_file.txt
-        ls -la downloads/
-
-    - name: Commit and Push Downloads
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add downloads/
-        git commit -m "Update downloads directory [skip ci]"
-        git push
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
